@@ -1,5 +1,6 @@
 ﻿using DTO_Comunes.DtoRequest;
 using DTO_Comunes.DtoResponse;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using MODELS.Models;
 
 
@@ -50,7 +51,15 @@ namespace DAT.Productos
                 {
                     transaccion.Rollback();
                     response.HasError = true;
-                    response.MensajeError = ex.Message;
+                    if (ex.InnerException != null)
+                    {
+                        response.MensajeError = ex.InnerException.Message;
+                    }
+                    else
+                    {
+                        response.MensajeError = ex.Message;
+                    }
+                    
                 }
                 return response;
             }
