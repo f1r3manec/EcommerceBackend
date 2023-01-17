@@ -6,6 +6,11 @@ namespace DAT.Inventario
 {
     public class Inventario
     {
+        /// <summary>
+        /// Agrega movimiento de inventario en la base de datos
+        /// </summary>
+        /// <param name="movimiento">DtoMovimiento Inventario</param>
+        /// <returns>ResponseObjec con los datos del proceso</returns>
         public static async Task<ResponseObject> AgregarMovimientoInventario(DtoMovimientoInventario movimiento)
         {
             ResponseObject respuesta = new ResponseObject();
@@ -28,8 +33,8 @@ namespace DAT.Inventario
                 catch (Exception ex)
                 {
                     transaccion.Rollback();
-                    respuesta.HasError= true;
-                    respuesta.MensajeError=ex.Message;
+                    respuesta.SetErrorDtoResponse(ex);
+                    
                 }
             }
             return respuesta;

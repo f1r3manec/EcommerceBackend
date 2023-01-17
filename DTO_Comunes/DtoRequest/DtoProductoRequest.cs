@@ -10,6 +10,8 @@ namespace DTO_Comunes.DtoRequest
     public class DtoProductoRequest
     {
         public int IdProducto { get; set; }
+        [Required]
+        public string  NombreProducto { get; set; }
 
         [Required]
         public string  DescripcionProducto { get; set; }

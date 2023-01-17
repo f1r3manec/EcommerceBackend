@@ -19,6 +19,19 @@ namespace DTO_Comunes.DtoResponse
         public object? Payload { get; set; } 
         public bool HasError { get; set; }
         public string MensajeError { get; set; }
+
+        public void SetErrorDtoResponse (Exception ex)
+        {
+            this.HasError = true;
+            if (ex.InnerException != null)
+            {
+                this.MensajeError= ex.InnerException.Message;
+            }
+            else
+            {
+                this .MensajeError = ex.Message;
+            }
+        }
         
 
     }

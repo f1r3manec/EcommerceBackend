@@ -11,7 +11,10 @@ namespace DAT.Contenido
 {
     public class ContenidoCatalogos
     {
-        
+        /// <summary>
+        /// Retorna Catalogo de categorias
+        /// </summary>
+        /// <returns></returns>
         public static async Task<ResponseObject> GetCategorias()
         {
             ResponseObject respuesta= new();
@@ -32,8 +35,12 @@ namespace DAT.Contenido
 
             
         }
+        /// <summary>
+        /// Retorna catalogo de presentaciones de productos
+        /// </summary>
+        /// <returns>ResponseObjec con los datos del proceso</returns>
 
-        public  static async Task<ResponseObject> GetPresentaciones()
+        public static async Task<ResponseObject> GetPresentaciones()
         {
             ResponseObject respuesta = new();
             try

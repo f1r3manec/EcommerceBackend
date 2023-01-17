@@ -1,23 +1,35 @@
-﻿using DTO_Comunes.DtoRequest;
+﻿using BLL.Servicios;
+using DTO_Comunes.DtoRequest;
 using DTO_Comunes.DtoResponse;
-
+using DTO_Comunes.StructHelpers;
 
 namespace BLL.Inventario
 {
     public  class MovimientoInventario
     {
+        /// <summary>
+        /// Valida datos para generar moviemiento de inventario
+        /// </summary>
+        /// <param name="movimientoInventario"></param>
+        /// <returns>ResponseObjec con los datos del proceso</returns>
         public static async Task<ResponseObject> MovimeintoInventarioBLL(DtoMovimientoInventario movimientoInventario)
         {
-			try
+            ResponseObject respuesta = new();
+            try
 			{
-                return await DAT.Inventario.Inventario.AgregarMovimientoInventario(movimientoInventario);
+                respuesta= await DAT.Inventario.Inventario.AgregarMovimientoInventario(movimientoInventario);
+                if (!Validadores.ValidaCantidadEnteros(movimientoInventario.Cantidad, GenericoStruct.PresentaCionProductos.DiferentesDeCero))
+                {
+                    throw new Exception("Error en la cantidad del producto, valide campo");
+                }
+                respuesta = await DAT.Inventario.Inventario.AgregarMovimientoInventario(movimientoInventario);
 
             }
-			catch (Exception)
+			catch (Exception ex)
 			{
-
-				throw;
+				respuesta.SetErrorDtoResponse(ex);
 			}
+            return respuesta;
         }
     }
 }
