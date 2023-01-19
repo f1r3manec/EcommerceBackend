@@ -25,7 +25,7 @@ public partial class PrEcomerseContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=pr_ecomerse;Persist Security Info=True;User ID=sa;Password=171922DentiXpress;trustServerCertificate=Yes;Encrypt=true");
+        => optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=pr_ecomerse;Persist Security Info=True;User ID=sa;Password=171922DentiXpress; TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -62,8 +62,16 @@ public partial class PrEcomerseContext : DbContext
             entity.ToTable("producto");
 
             entity.Property(e => e.IntIdProduto).HasColumnName("int_id_produto");
+            entity.Property(e => e.BitActivo)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("bit_activo");
+            entity.Property(e => e.BitGravaIva).HasColumnName("bit_grava_iva");
             entity.Property(e => e.IntIdCategoriaProducto).HasColumnName("int_id_categoria_producto");
             entity.Property(e => e.IntIdPresentacionProducto).HasColumnName("int_id_presentacion_producto");
+            entity.Property(e => e.IntPorcentajeGanancia).HasColumnName("int_porcentaje_ganancia");
+            entity.Property(e => e.MonValorCostoUnitario)
+                .HasColumnType("money")
+                .HasColumnName("mon_valor_costo_unitario");
             entity.Property(e => e.StrDescripcionProducto)
                 .HasMaxLength(250)
                 .IsUnicode(false)
@@ -75,10 +83,12 @@ public partial class PrEcomerseContext : DbContext
 
             entity.HasOne(d => d.IntIdCategoriaProductoNavigation).WithMany(p => p.Productos)
                 .HasForeignKey(d => d.IntIdCategoriaProducto)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Categoria");
 
             entity.HasOne(d => d.IntIdPresentacionProductoNavigation).WithMany(p => p.Productos)
                 .HasForeignKey(d => d.IntIdPresentacionProducto)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Presentacion");
         });
 

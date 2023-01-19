@@ -13,5 +13,10 @@ namespace DTO_Comunes.StructHelpers
             MayoresCero=1,
             DiferentesDeCero=2,
         }
+
+        public enum Impuestos
+        {
+            IVA=12
+        }
     }
 }

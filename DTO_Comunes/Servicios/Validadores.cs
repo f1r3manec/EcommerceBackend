@@ -1,13 +1,13 @@
-﻿using DAT.Productos;
+﻿
 using DTO_Comunes.StructHelpers;
-using MODELS.Models;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BLL.Servicios
+namespace DTO_Comunes
 {
     public class Validadores
     {

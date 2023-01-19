@@ -1,8 +1,8 @@
-﻿using BLL.Servicios;
+﻿
 using DTO_Comunes.StructHelpers;
 using DTO_Comunes.DtoRequest;
 using DTO_Comunes.DtoResponse;
-
+using DTO_Comunes;
 
 namespace BLL.Productos
 {
@@ -38,5 +38,47 @@ namespace BLL.Productos
 			}
             return respuesta;
         }
+
+        public static async Task<ResponseObject>ConsultarProductos(int idProducto = 0)
+        {
+            ResponseObject respuesta = new();
+            try
+            {
+                respuesta = await DAT.Productos.Productos.ConsultarProductos(idProducto);
+            }
+            catch (Exception ex)
+            {
+                respuesta.SetErrorDtoResponse(ex);
+            }
+            return respuesta;   
+        }
+
+        public static async Task<ResponseObject> EliminarProductos_Bll(int idProducto = 0)
+        {
+            ResponseObject respuesta = new();
+            try
+            {
+                respuesta = await DAT.Productos.Productos.EliminarProducto(idProducto);
+            }
+            catch (Exception ex)
+            {
+                respuesta.SetErrorDtoResponse(ex);
+            }
+            return respuesta;
+        }
+        public static async Task<ResponseObject> ActivarProducto_BLL(int idProducto = 0)
+        {
+            ResponseObject respuesta = new();
+            try
+            {
+                respuesta = await DAT.Productos.Productos.ActivarProducto(idProducto);
+            }
+            catch (Exception ex)
+            {
+                respuesta.SetErrorDtoResponse(ex);
+            }
+            return respuesta;
+        }
+
     }
 }

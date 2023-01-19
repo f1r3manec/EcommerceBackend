@@ -1,7 +1,9 @@
 ﻿using DTO_Comunes.DtoRequest;
 using DTO_Comunes.DtoResponse;
+using DTO_Comunes.Servicios;
+using Microsoft.EntityFrameworkCore;
 using MODELS.Models;
-
+using System.Data;
 
 namespace DAT.Productos
 {
@@ -25,6 +27,10 @@ namespace DAT.Productos
                         StrDescripcionProducto = producto.DescripcionProducto,
                         IntIdCategoriaProducto = producto.IdCategoria,
                         IntIdPresentacionProducto = producto.IdPresentacion,
+                        MonValorCostoUnitario=producto.Costo_unitario,
+                        BitActivo=producto.ProductoActivo,
+                        BitGravaIva=producto.GrabaIva,
+                        IntPorcentajeGanancia=producto.PorcentajeMargenGanancia,
                     };
                     await objContext.AddAsync(insert);
                     await objContext.SaveChangesAsync();
@@ -74,7 +80,7 @@ namespace DAT.Productos
                 {
                     if (IdProducto == 0)
                     {
-                        productos = (from p in db.Productos
+                        productos =await  (from p in db.Productos
                                      from c in db.CategoriaProductos
                                      from pre in db.PresentacionProductos
                                      where p.IntIdPresentacionProducto == pre.IntIdPresentacionProducto && p.IntIdCategoriaProducto == c.IntIdCategoriaProducto
@@ -87,15 +93,21 @@ namespace DAT.Productos
                                          Categoria = c.StrNombreCategoria!,
                                          IdPresentacion = pre.IntIdPresentacionProducto,
                                          Presentacion = pre.StrDescripcionPresentacion!,
+                                         GrabaIva=p.BitGravaIva,
+                                         CostoUnitario=p.MonValorCostoUnitario,
+                                         MargenGananacia=p.IntPorcentajeGanancia,
+                                         ProductoActivo=p.BitActivo,
+                                         CostoCliente= CalculosImpuestosCostos.CalcularCostoCliente(p.MonValorCostoUnitario,p.BitGravaIva,p.IntPorcentajeGanancia),
                                          Stock = (int) (from s in db.StockProductos where p.IntIdProduto == s.IntIdStockProducto 
                                                   select s.IntCantidadMovimiento).Sum()!
                                    }
 
-                                   ).ToList();
+                                   ).ToListAsync();
+
                     }
                     else
                     {
-                        productos = (from p in db.Productos
+                        productos = await (from p in db.Productos
                                      from c in db.CategoriaProductos
                                      from pre in db.PresentacionProductos
                                      where p.IntIdPresentacionProducto == pre.IntIdPresentacionProducto 
@@ -110,11 +122,18 @@ namespace DAT.Productos
                                          Categoria = c.StrNombreCategoria!,
                                          IdPresentacion = pre.IntIdPresentacionProducto,
                                          Presentacion = pre.StrDescripcionPresentacion!,
+                                         GrabaIva = p.BitGravaIva,
+                                         CostoUnitario = p.MonValorCostoUnitario,
+                                         MargenGananacia = p.IntPorcentajeGanancia,
+                                         ProductoActivo = p.BitActivo!,
+                                         CostoCliente = CalculosImpuestosCostos.CalcularCostoCliente(p.MonValorCostoUnitario, p.BitGravaIva, p.IntPorcentajeGanancia),
                                          Stock = (int)(from s in db.StockProductos
                                                        where p.IntIdProduto == s.IntIdStockProducto
                                                        select s.IntCantidadMovimiento).Sum()!
-                                     }).ToList();
+                                     }).ToListAsync();
                     }
+
+                    response.Payload = productos;
                 }
                 catch (Exception ex)
                 {
@@ -126,7 +145,64 @@ namespace DAT.Productos
 
             return response;
         }
-      
+
+        /// <summary>
+        /// Eliminado Lógico de producto
+        /// </summary>
+        /// <param name="IdProducto"></param>
+        /// <returns></returns>
+        public static async Task<ResponseObject> EliminarProducto(int IdProducto)
+        {
+            ResponseObject respuesta = new ResponseObject();
+            using (var db = new PrEcomerseContext())
+            
+            {
+                try
+                {
+                    Producto producto = await (from p in db.Productos where p.IntIdProduto.Equals(IdProducto) select p).FirstOrDefaultAsync();
+                    if (producto == null)
+                    {
+                        throw new SystemException("Producto no existente");
+                    }
+                    producto!.BitActivo = false;
+                    await db.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    respuesta.SetErrorDtoResponse(ex);
+                }
+            }
+            return respuesta;
+        }
+        /// <summary>
+        /// Activa producto que esté deshabilitado
+        /// </summary>
+        /// <param name="IdProducto"></param>
+        /// <returns></returns>
+        public static async Task<ResponseObject> ActivarProducto(int IdProducto)
+        {
+            ResponseObject respuesta = new ResponseObject();
+            using (var db = new PrEcomerseContext())
+
+            {
+                try
+                {
+                    Producto producto = await (from p in db.Productos where p.IntIdProduto.Equals(IdProducto) select p).FirstOrDefaultAsync();
+                    if (producto == null) 
+                    {
+                        throw new SystemException("Producto no existente");
+                    }
+                    producto!.BitActivo = true;
+                    await db.SaveChangesAsync();
+                    
+                }
+                catch (Exception ex)
+                {
+                    respuesta.SetErrorDtoResponse(ex);
+                }
+            }
+            return respuesta;
+        }
     }
 }
 

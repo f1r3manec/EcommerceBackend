@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DAT\DAT.csproj" />
+    <ProjectReference Include="..\DAT\DAO.csproj" />
     <ProjectReference Include="..\DTO_Comunes\DTO_Comunes.csproj" />
   </ItemGroup>
 

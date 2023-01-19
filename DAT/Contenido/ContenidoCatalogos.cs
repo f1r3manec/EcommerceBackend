@@ -24,16 +24,16 @@ namespace DAT.Contenido
                 {
                     respuesta.Payload = await Task.FromResult((from p in objectConection.CategoriaProductos select p).ToList());
                 }
-                return respuesta;
+
             }
             catch (Exception ex)
             {
-                respuesta.HasError= true;
-                respuesta.MensajeError= ex.Message;
-                return respuesta;
+                respuesta.SetErrorDtoResponse(ex);
             }
+            return respuesta;
 
-            
+
+
         }
         /// <summary>
         /// Retorna catalogo de presentaciones de productos
@@ -49,15 +49,13 @@ namespace DAT.Contenido
                 {
                     respuesta.Payload = await Task.FromResult((from p in objectConection.PresentacionProductos select p).ToList());
                 }
-                return respuesta;
+              
             }
             catch (Exception ex)
             {
-                respuesta.HasError = true;
-                respuesta.MensajeError = ex.Message;
-                return respuesta;
+                respuesta.SetErrorDtoResponse(ex);
             }
-
+            return respuesta;
 
         }
     }

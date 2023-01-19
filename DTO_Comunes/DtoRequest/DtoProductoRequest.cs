@@ -23,6 +23,15 @@ namespace DTO_Comunes.DtoRequest
 
         [Required]  
         public int Cantidad_Producto { get; set; }
+        [Required]
+        public decimal Costo_unitario { get; set; }
+        [Required]
+        public bool GrabaIva { get; set; }
+        [Required]
+        public short PorcentajeMargenGanancia { get; set; }
+
+        public bool ProductoActivo { get; set; } = false;
+
 
     }
 }
