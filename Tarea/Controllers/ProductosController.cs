@@ -73,7 +73,7 @@ namespace Tarea.Controllers
 
             try
             {
-                responseObject = await ProductosBll.ConsultarProductos (idProducto = 0);
+                responseObject = await ProductosBll.ConsultarProductos (idProducto);
                 if (responseObject.HasError)
                 {
                     throw new Exception();

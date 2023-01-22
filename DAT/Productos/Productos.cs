@@ -70,7 +70,7 @@ namespace DAT.Productos
         /// </summary>
         /// <param name="IdProducto"></param>
         /// <returns>Retorna Response Object con lista de productos sea 1 o varios</returns>
-        public static async Task<ResponseObject> ConsultarProductos(int IdProducto=0)
+        public static async Task<ResponseObject> ConsultarProductos(int IdProducto)
         {
             ResponseObject response = new ResponseObject();
             List<DtoProductosResponse> productos = new();
@@ -131,6 +131,10 @@ namespace DAT.Productos
                                                        where p.IntIdProduto == s.IntIdStockProducto
                                                        select s.IntCantidadMovimiento).Sum()!
                                      }).ToListAsync();
+                        if (productos.Count() == 0 )
+                        {
+                            throw new SystemException("Producto No Existe");
+                        }
                     }
 
                     response.Payload = productos;
