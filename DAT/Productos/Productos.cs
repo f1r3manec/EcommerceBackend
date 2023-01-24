@@ -24,6 +24,7 @@ namespace DAT.Productos
                 { 
                     var insert = new Producto
                     {
+                        StrNombreProducto= producto.NombreProducto,
                         StrDescripcionProducto = producto.DescripcionProducto,
                         IntIdCategoriaProducto = producto.IdCategoria,
                         IntIdPresentacionProducto = producto.IdPresentacion,
@@ -80,29 +81,27 @@ namespace DAT.Productos
                 {
                     if (IdProducto == 0)
                     {
-                        productos =await  (from p in db.Productos
-                                     from c in db.CategoriaProductos
-                                     from pre in db.PresentacionProductos
-                                     where p.IntIdPresentacionProducto == pre.IntIdPresentacionProducto && p.IntIdCategoriaProducto == c.IntIdCategoriaProducto
-                                     select new DtoProductosResponse
-                                     {
-                                         IdProducto = p.IntIdProduto,
-                                         NombreProducto = p.StrNombreProducto!,
-                                         DescripcionProducto = p.StrDescripcionProducto!,
-                                         IdCategoria = c.IntIdCategoriaProducto,
-                                         Categoria = c.StrNombreCategoria!,
-                                         IdPresentacion = pre.IntIdPresentacionProducto,
-                                         Presentacion = pre.StrDescripcionPresentacion!,
-                                         GrabaIva=p.BitGravaIva,
-                                         CostoUnitario=p.MonValorCostoUnitario,
-                                         MargenGananacia=p.IntPorcentajeGanancia,
-                                         ProductoActivo=p.BitActivo,
-                                         CostoCliente= CalculosImpuestosCostos.CalcularCostoCliente(p.MonValorCostoUnitario,p.BitGravaIva,p.IntPorcentajeGanancia),
-                                         Stock = (int) (from s in db.StockProductos where p.IntIdProduto == s.IntIdStockProducto 
-                                                  select s.IntCantidadMovimiento).Sum()!
-                                   }
-
-                                   ).ToListAsync();
+                        productos = await (from p in db.Productos
+                                           from c in db.CategoriaProductos
+                                           from pre in db.PresentacionProductos
+                                           where p.IntIdPresentacionProducto == pre.IntIdPresentacionProducto && p.IntIdCategoriaProducto == c.IntIdCategoriaProducto
+                                           select new DtoProductosResponse
+                                           {
+                                               IdProducto = p.IntIdProduto,
+                                               NombreProducto = p.StrNombreProducto!,
+                                               DescripcionProducto = p.StrDescripcionProducto!,
+                                               IdCategoria = c.IntIdCategoriaProducto,
+                                               Categoria = c.StrNombreCategoria!,
+                                               IdPresentacion = pre.IntIdPresentacionProducto,
+                                               Presentacion = pre.StrDescripcionPresentacion!,
+                                               GrabaIva = p.BitGravaIva,
+                                               CostoUnitario = p.MonValorCostoUnitario,
+                                               MargenGananacia = p.IntPorcentajeGanancia,
+                                               ProductoActivo = p.BitActivo,
+                                               CostoCliente = CalculosImpuestosCostos.CalcularCostoCliente(p.MonValorCostoUnitario, p.BitGravaIva, p.IntPorcentajeGanancia),
+                                               Stock=0
+                                           }).ToListAsync();
+              
 
                     }
                     else

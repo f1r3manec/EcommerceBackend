@@ -3,6 +3,7 @@ using DTO_Comunes.DtoResponse;
 using MODELS.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,7 +23,12 @@ namespace DAT.Contenido
             {
                 using (var objectConection = new PrEcomerseContext())
                 {
-                    respuesta.Payload = await Task.FromResult((from p in objectConection.CategoriaProductos select p).ToList());
+                    respuesta.Payload = await Task.FromResult((from p in objectConection.CategoriaProductos select new DtoComboBoxListados
+                    {
+                        IdItem=p.IntIdCategoriaProducto,
+                        Descripcion=p.StrNombreCategoria
+
+                    }).ToList());
                 }
 
             }
@@ -47,7 +53,12 @@ namespace DAT.Contenido
             {
                 using (var objectConection = new PrEcomerseContext())
                 {
-                    respuesta.Payload = await Task.FromResult((from p in objectConection.PresentacionProductos select p).ToList());
+                    respuesta.Payload = await Task.FromResult((from p in objectConection.PresentacionProductos select new DtoComboBoxListados
+                    {
+                        IdItem = p.IntIdPresentacionProducto,
+                        Descripcion = p.StrDescripcionPresentacion!
+
+                    }).ToList());
                 }
               
             }
